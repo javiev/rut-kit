@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { cleanRut, formatRut, getRutCheckDigit, isValidRut } from '../src';
+import {
+  cleanRut,
+  formatRut,
+  getErrorMessage,
+  getRutCheckDigit,
+  isValidRut,
+  validateRut,
+} from '../src';
 
 describe('cleanRut', () => {
   it('removes dots and dashes', () => {
@@ -122,5 +129,121 @@ describe('formatRut', () => {
 
   it('handles single character', () => {
     expect(formatRut('1')).toBe('1');
+  });
+});
+
+describe('validateRut', () => {
+  it('returns valid result for correct RUT', () => {
+    const result = validateRut('18.972.631-7');
+    expect(result.valid).toBe(true);
+    if (result.valid) {
+      expect(result.rut).toBe('189726317');
+    }
+  });
+
+  it('returns valid result for RUT without formatting', () => {
+    const result = validateRut('189726317');
+    expect(result.valid).toBe(true);
+    if (result.valid) {
+      expect(result.rut).toBe('189726317');
+    }
+  });
+
+  it('returns valid result for RUT with K check digit', () => {
+    const result = validateRut('6-K');
+    expect(result.valid).toBe(true);
+    if (result.valid) {
+      expect(result.rut).toBe('6K');
+    }
+  });
+
+  it('returns invalidChars error for invalid characters', () => {
+    const result = validateRut('18.972.631-X');
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.error).toBe('invalidChars');
+    }
+  });
+
+  it('returns invalidFormat error for malformed RUT', () => {
+    const result = validateRut('1');
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.error).toBe('invalidFormat');
+    }
+  });
+
+  it('returns invalidFormat error for too long RUT', () => {
+    const result = validateRut('123456789012');
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.error).toBe('invalidFormat');
+    }
+  });
+
+  it('returns invalidCheckDigit error for wrong check digit', () => {
+    const result = validateRut('18.972.631-0');
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.error).toBe('invalidCheckDigit');
+    }
+  });
+
+  it('returns invalidChars error for letters in body', () => {
+    const result = validateRut('abc123');
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.error).toBe('invalidChars');
+    }
+  });
+
+  it('returns invalidChars error for empty string', () => {
+    const result = validateRut('');
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.error).toBe('invalidChars');
+    }
+  });
+});
+
+describe('getErrorMessage', () => {
+  it('returns default message for invalidChars', () => {
+    const message = getErrorMessage('invalidChars');
+    expect(message).toBe('RUT contiene caracteres inválidos');
+  });
+
+  it('returns default message for invalidFormat', () => {
+    const message = getErrorMessage('invalidFormat');
+    expect(message).toBe('Formato de RUT inválido');
+  });
+
+  it('returns default message for invalidCheckDigit', () => {
+    const message = getErrorMessage('invalidCheckDigit');
+    expect(message).toBe('Dígito verificador incorrecto');
+  });
+
+  it('returns custom message when provided', () => {
+    const message = getErrorMessage('invalidChars', {
+      invalidChars: 'Invalid characters in RUT',
+    });
+    expect(message).toBe('Invalid characters in RUT');
+  });
+
+  it('merges custom messages with defaults', () => {
+    const customMessages = {
+      invalidChars: 'Custom chars message',
+    };
+    expect(getErrorMessage('invalidChars', customMessages)).toBe('Custom chars message');
+    expect(getErrorMessage('invalidFormat', customMessages)).toBe('Formato de RUT inválido');
+  });
+
+  it('works with validateRut result', () => {
+    const result = validateRut('invalid-rut');
+    if (!result.valid) {
+      const message = getErrorMessage(result.error, {
+        invalidChars: 'Invalid characters detected',
+      });
+      expect(message).toBe('Invalid characters detected');
+    }
   });
 });

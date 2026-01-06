@@ -1,22 +1,11 @@
 import { z } from 'zod';
 import { cleanRut, formatRut, getRutCheckDigit } from './core';
+import { defaultErrorMessages, type RutErrorMessages } from './types';
 
-export type RutMessages = {
-  required?: string;
-  invalidChars?: string;
-  invalidFormat?: string;
-  invalidCheckDigit?: string;
-};
-
-const defaultMessages: Required<RutMessages> = {
-  required: 'RUT es requerido',
-  invalidChars: 'RUT contiene caracteres inválidos',
-  invalidFormat: 'Formato de RUT inválido',
-  invalidCheckDigit: 'Dígito verificador incorrecto',
-};
+export type RutMessages = RutErrorMessages;
 
 export function createRutSchema(messages: RutMessages = {}) {
-  const msgs = { ...defaultMessages, ...messages };
+  const msgs = { ...defaultErrorMessages, ...messages };
 
   return z
     .string({ error: msgs.required })
