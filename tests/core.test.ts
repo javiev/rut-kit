@@ -102,33 +102,77 @@ describe('isValidRut', () => {
 });
 
 describe('formatRut', () => {
-  it('formats clean RUT', () => {
-    expect(formatRut('189726317')).toBe('18.972.631-7');
+  describe('default format (no dots, with dash)', () => {
+    it('formats clean RUT', () => {
+      expect(formatRut('189726317')).toBe('18972631-7');
+    });
+
+    it('formats already formatted RUT', () => {
+      expect(formatRut('18.972.631-7')).toBe('18972631-7');
+    });
+
+    it('formats short RUT', () => {
+      expect(formatRut('1234567')).toBe('123456-7');
+    });
+
+    it('formats RUT with K', () => {
+      expect(formatRut('17779355K')).toBe('17779355-K');
+      expect(formatRut('17779355k')).toBe('17779355-K');
+    });
+
+    it('handles single digit body', () => {
+      expect(formatRut('1-9')).toBe('1-9');
+    });
+
+    it('handles empty string', () => {
+      expect(formatRut('')).toBe('');
+    });
+
+    it('handles single character', () => {
+      expect(formatRut('1')).toBe('1');
+    });
   });
 
-  it('formats already formatted RUT', () => {
-    expect(formatRut('18.972.631-7')).toBe('18.972.631-7');
+  describe('clean format', () => {
+    it('formats to clean RUT without dots or dash', () => {
+      expect(formatRut('18.972.631-7', 'clean')).toBe('189726317');
+    });
+
+    it('formats already clean RUT', () => {
+      expect(formatRut('189726317', 'clean')).toBe('189726317');
+    });
+
+    it('formats RUT with K', () => {
+      expect(formatRut('17.779.355-K', 'clean')).toBe('17779355K');
+      expect(formatRut('17779355k', 'clean')).toBe('17779355K');
+    });
+
+    it('handles empty string', () => {
+      expect(formatRut('', 'clean')).toBe('');
+    });
   });
 
-  it('formats short RUT', () => {
-    expect(formatRut('1234567')).toBe('123.456-7');
-  });
+  describe('formatted format', () => {
+    it('formats to formatted RUT with dots and dash', () => {
+      expect(formatRut('189726317', 'formatted')).toBe('18.972.631-7');
+    });
 
-  it('formats RUT with K', () => {
-    expect(formatRut('17779355K')).toBe('17.779.355-K');
-    expect(formatRut('17779355k')).toBe('17.779.355-K');
-  });
+    it('formats already formatted RUT', () => {
+      expect(formatRut('18.972.631-7', 'formatted')).toBe('18.972.631-7');
+    });
 
-  it('handles single digit body', () => {
-    expect(formatRut('1-9')).toBe('1-9');
-  });
+    it('formats short RUT', () => {
+      expect(formatRut('1234567', 'formatted')).toBe('123.456-7');
+    });
 
-  it('handles empty string', () => {
-    expect(formatRut('')).toBe('');
-  });
+    it('formats RUT with K', () => {
+      expect(formatRut('17779355K', 'formatted')).toBe('17.779.355-K');
+      expect(formatRut('17779355k', 'formatted')).toBe('17.779.355-K');
+    });
 
-  it('handles single character', () => {
-    expect(formatRut('1')).toBe('1');
+    it('handles single digit body', () => {
+      expect(formatRut('1-9', 'formatted')).toBe('1-9');
+    });
   });
 });
 

@@ -6,7 +6,11 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts"],
-      exclude: ["src/index.ts"],
+      exclude: [
+        "src/index.ts",
+        "src/shared/index.ts",
+        "src/shared/types.ts",
+      ],
       reporter: ["text"],
     },
   },

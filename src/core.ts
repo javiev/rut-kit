@@ -1,9 +1,11 @@
 import {
   defaultErrorMessages,
+  RUT_FORMAT,
   type RutErrorMessages,
+  type RutOutputFormat,
   type RutValidationError,
   type RutValidationResult,
-} from './types';
+} from './shared';
 
 /**
  * Removes all formatting characters from a RUT (dots, dashes, spaces).
@@ -112,11 +114,16 @@ export function getErrorMessage(error: RutValidationError, messages?: RutErrorMe
 }
 
 /**
- * Formats a RUT to the standard Chilean format (XX.XXX.XXX-X).
+ * Formats a RUT according to the specified format.
  * @param rut - The RUT to format
+ * @param format - The output format: 'clean' or 'formatted'. Default: standard format (no dots, with dash)
  * @returns The formatted RUT string
+ * @example
+ * formatRut('18.972.631-7') // '18972631-7' (default: no dots, with dash)
+ * formatRut('18.972.631-7', 'clean') // '189726317' (no dots, no dash)
+ * formatRut('18.972.631-7', 'formatted') // '18.972.631-7' (with dots and dash)
  */
-export function formatRut(rut: string): string {
+export function formatRut(rut: string, format?: RutOutputFormat): string {
   const cleaned = cleanRut(rut);
 
   if (cleaned.length < 2) {
@@ -126,7 +133,15 @@ export function formatRut(rut: string): string {
   const body = cleaned.slice(0, -1);
   const checkDigit = cleaned.slice(-1);
 
-  const formattedBody = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  if (format === RUT_FORMAT.CLEAN) {
+    return cleaned;
+  }
 
-  return `${formattedBody}-${checkDigit}`;
+  if (format === RUT_FORMAT.FORMATTED) {
+    const formattedBody = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return `${formattedBody}-${checkDigit}`;
+  }
+
+  // Default: standard format (no dots, with dash)
+  return `${body}-${checkDigit}`;
 }
