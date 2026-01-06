@@ -1,3 +1,10 @@
+import {
+  defaultErrorMessages,
+  type RutErrorMessages,
+  type RutValidationError,
+  type RutValidationResult,
+} from './types';
+
 /**
  * Removes all formatting characters from a RUT (dots, dashes, spaces).
  * @param rut - The RUT string to clean
@@ -50,6 +57,58 @@ export function isValidRut(rut: string): boolean {
   const checkDigit = cleaned.slice(-1).toUpperCase();
 
   return getRutCheckDigit(body) === checkDigit;
+}
+
+/**
+ * Validates a complete Chilean RUT with detailed error information.
+ * @param rut - The RUT to validate, can be formatted or clean
+ * @returns Validation result with cleaned RUT if valid, or error type if invalid
+ * @example
+ * const result = validateRut('12.345.678-5');
+ * if (result.valid) {
+ *   console.log(result.rut); // '123456785'
+ * } else {
+ *   console.log(result.error); // 'invalidCheckDigit'
+ * }
+ */
+export function validateRut(rut: string): RutValidationResult {
+  const cleaned = cleanRut(rut);
+
+  if (!/^[\dkK]+$/.test(cleaned)) {
+    return { valid: false, error: 'invalidChars' };
+  }
+
+  if (!/^\d{1,8}[\dkK]$/.test(cleaned)) {
+    return { valid: false, error: 'invalidFormat' };
+  }
+
+  const body = cleaned.slice(0, -1);
+  const checkDigit = cleaned.slice(-1).toUpperCase();
+
+  if (getRutCheckDigit(body) !== checkDigit) {
+    return { valid: false, error: 'invalidCheckDigit' };
+  }
+
+  return { valid: true, rut: cleaned };
+}
+
+/**
+ * Gets a custom error message for a validation error.
+ * @param error - The validation error type
+ * @param messages - Optional custom error messages
+ * @returns The error message
+ * @example
+ * const result = validateRut('invalid');
+ * if (!result.valid) {
+ *   const message = getErrorMessage(result.error, {
+ *     invalidChars: 'Invalid characters in RUT'
+ *   });
+ *   console.log(message);
+ * }
+ */
+export function getErrorMessage(error: RutValidationError, messages?: RutErrorMessages): string {
+  const msgs = { ...defaultErrorMessages, ...messages };
+  return msgs[error];
 }
 
 /**
