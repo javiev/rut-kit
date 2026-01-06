@@ -4,6 +4,15 @@
 export type RutValidationError = 'invalidChars' | 'invalidFormat' | 'invalidCheckDigit';
 
 /**
+ * Output format for RUT formatting.
+ * - clean: No dots, no dash (e.g., "123456789")
+ * - formatted: With dots and dash (e.g., "12.345.678-9")
+ *
+ * Default (when not specified): No dots, with dash (e.g., "12345678-9") - Recommended for storage
+ */
+export type RutOutputFormat = 'clean' | 'formatted';
+
+/**
  * Result of RUT validation with detailed error information.
  */
 export type RutValidationResult =
@@ -18,14 +27,4 @@ export type RutErrorMessages = {
   invalidChars?: string;
   invalidFormat?: string;
   invalidCheckDigit?: string;
-};
-
-/**
- * Default error messages in Spanish.
- */
-export const defaultErrorMessages: Required<RutErrorMessages> = {
-  required: 'RUT es requerido',
-  invalidChars: 'RUT contiene caracteres inválidos',
-  invalidFormat: 'Formato de RUT inválido',
-  invalidCheckDigit: 'Dígito verificador incorrecto',
 };

@@ -9,7 +9,8 @@ export {
 export {
   defaultErrorMessages,
   type RutErrorMessages,
+  type RutOutputFormat,
   type RutValidationError,
   type RutValidationResult,
-} from './types';
+} from './shared';
 export { createRutSchema, type RutMessages, rutSchema } from './zod';

@@ -1,10 +1,16 @@
 import { z } from 'zod';
 import { cleanRut, formatRut, getRutCheckDigit } from './core';
-import { defaultErrorMessages, type RutErrorMessages } from './types';
+import { defaultErrorMessages, type RutErrorMessages, type RutOutputFormat } from './shared';
 
 export type RutMessages = RutErrorMessages;
 
-export function createRutSchema(messages: RutMessages = {}) {
+export interface RutSchemaOptions {
+  messages?: RutMessages;
+  outputFormat?: RutOutputFormat;
+}
+
+export function createRutSchema(options: RutSchemaOptions = {}) {
+  const { messages = {}, outputFormat } = options;
   const msgs = { ...defaultErrorMessages, ...messages };
 
   return z
@@ -43,7 +49,7 @@ export function createRutSchema(messages: RutMessages = {}) {
         });
       }
     })
-    .transform((val) => formatRut(val));
+    .transform((val) => formatRut(val, outputFormat));
 }
 
 export const rutSchema = createRutSchema();
