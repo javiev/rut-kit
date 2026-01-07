@@ -1,8 +1,11 @@
 {
   "name": "rut-kit",
   "version": "0.3.0",
-  "description": "Chilean RUT validator with custom messages for JavaScript, TypeScript and Zod",
-  "author": "Javier Gómez C",
+  "description": "Validador de RUT chileno con mensajes personalizados para JavaScript, TypeScript y Zod",
+  "author": {
+    "name": "Javier Gómez Contreras",
+    "email": "hola@javiev.dev"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/javiev/rut-kit.git"
@@ -13,13 +16,25 @@
   "homepage": "https://github.com/javiev/rut-kit",
   "keywords": [
     "rut",
+    "run",
     "chile",
     "chilean",
     "validation",
     "validator",
+    "validar",
+    "format",
+    "formatter",
+    "digito-verificador",
+    "check-digit",
     "zod",
+    "schema",
     "typescript",
-    "javascript"
+    "javascript",
+    "nodejs",
+    "deno",
+    "bun",
+    "browser",
+    "esm"
   ],
   "type": "module",
   "main": "./dist/index.cjs",
