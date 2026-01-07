@@ -13,4 +13,3 @@ export {
   type RutValidationError,
   type RutValidationResult,
 } from './shared';
-export { createRutSchema, type RutMessages, rutSchema } from './zod';

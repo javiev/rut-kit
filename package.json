@@ -1,6 +1,6 @@
 {
   "name": "rut-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Chilean RUT validator with custom messages for JavaScript, TypeScript and Zod",
   "author": "Javier Gómez C",
   "repository": {
@@ -34,16 +34,6 @@
       "require": {
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
-      }
-    },
-    "./core": {
-      "import": {
-        "types": "./dist/core.d.ts",
-        "default": "./dist/core.js"
-      },
-      "require": {
-        "types": "./dist/core.d.cts",
-        "default": "./dist/core.cjs"
       }
     },
     "./zod": {

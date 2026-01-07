@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createRutSchema, rutSchema } from '../src';
+import { createRutSchema, rutSchema } from '../src/zod';
 
 describe('rutSchema', () => {
   it('validates and formats correct RUT (default: no dots, with dash)', () => {
