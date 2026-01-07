@@ -8,12 +8,12 @@ import {
 } from './shared';
 
 /**
- * Removes all formatting characters from a RUT (dots, dashes, spaces).
+ * Removes all formatting characters from a RUT (dots, dashes, spaces, commas).
  * @param rut - The RUT string to clean
  * @returns The cleaned RUT string (only digits and K)
  */
 export function cleanRut(rut: string): string {
-  const cleaned = rut.replace(/[.\-\s]/g, '').toUpperCase();
+  const cleaned = rut.replace(/[.\-\s,]/g, '').toUpperCase();
   return cleaned.replace(/^0+/, '') || cleaned;
 }
 

@@ -33,6 +33,10 @@ describe('cleanRut', () => {
     expect(cleanRut('00123456789')).toBe('123456789');
     expect(cleanRut('0012213359-1')).toBe('122133591');
   });
+
+  it('removes commas', () => {
+    expect(cleanRut(',0.0077262111-6')).toBe('772621116');
+  });
 });
 
 describe('getRutCheckDigit', () => {

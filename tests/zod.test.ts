@@ -65,6 +65,22 @@ describe('rutSchema', () => {
       expect(issues[0].message).toBe('Dígito verificador incorrecto');
     }
   });
+
+  it('strips leading zeros', () => {
+    const result = rutSchema.safeParse('0012213359-1');
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data).toBe('12213359-1');
+    }
+  });
+
+  it('handles commas from Excel paste', () => {
+    const result = rutSchema.safeParse(',0.0077262111-6');
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data).toBe('77262111-6');
+    }
+  });
 });
 
 describe('createRutSchema', () => {
