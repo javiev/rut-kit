@@ -1,7 +1,7 @@
 {
   "name": "rut-kit",
   "version": "0.2.0",
-  "description": "Tiny Chilean RUT validator with custom messages for JavaScript, TypeScript and Zod",
+  "description": "Chilean RUT validator with custom messages for JavaScript, TypeScript and Zod",
   "author": "Javier Gómez C",
   "repository": {
     "type": "git",
@@ -71,8 +71,7 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx}": "biome check --write",
-    "*.json": "biome check --write"
+    "*.{js,ts}": "biome check --write"
   },
   "engines": {
     "node": ">=18.13.0"

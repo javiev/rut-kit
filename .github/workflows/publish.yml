@@ -1,22 +1,21 @@
-name: rut-kit CI
+name: Publish rut-kit to npm
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  release:
+    types: [published]
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
-  ci:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: ⚙️ Setup pnpm
+      - name: ⚙️ Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: '10'
@@ -25,16 +24,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
           cache: 'pnpm'
 
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 🔨 Build
+      - name: 🔨 Build package
         run: pnpm build
 
-      - name: 🔍 Lint
-        run: pnpm run lint
-
-      - name: 🧪 Run tests with coverage
-        run: pnpm run test:coverage
+      - name: 🚀 Publish to npm
+        run: pnpm publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
