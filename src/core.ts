@@ -13,7 +13,8 @@ import {
  * @returns The cleaned RUT string (only digits and K)
  */
 export function cleanRut(rut: string): string {
-  return rut.replace(/[.\-\s]/g, '').toUpperCase();
+  const cleaned = rut.replace(/[.\-\s]/g, '').toUpperCase();
+  return cleaned.replace(/^0+/, '') || cleaned;
 }
 
 /**
@@ -51,7 +52,7 @@ export function getRutCheckDigit(rut: string): string {
 export function isValidRut(rut: string): boolean {
   const cleaned = cleanRut(rut);
 
-  if (!/^\d{1,8}[\dkK]$/.test(cleaned)) {
+  if (!/^[1-9]\d{0,7}[\dkK]$/.test(cleaned)) {
     return false;
   }
 
@@ -80,7 +81,7 @@ export function validateRut(rut: string): RutValidationResult {
     return { valid: false, error: 'invalidChars' };
   }
 
-  if (!/^\d{1,8}[\dkK]$/.test(cleaned)) {
+  if (!/^[1-9]\d{0,7}[\dkK]$/.test(cleaned)) {
     return { valid: false, error: 'invalidFormat' };
   }
 
