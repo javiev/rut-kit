@@ -6,10 +6,9 @@ export {
   isValidRut,
   validateRut,
 } from './core';
-export {
-  defaultErrorMessages,
-  type RutErrorMessages,
-  type RutOutputFormat,
-  type RutValidationError,
-  type RutValidationResult,
+export type {
+  RutErrorMessages,
+  RutOutputFormat,
+  RutValidationError,
+  RutValidationResult,
 } from './shared';
