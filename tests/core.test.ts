@@ -28,6 +28,15 @@ describe('cleanRut', () => {
   it('handles empty string', () => {
     expect(cleanRut('')).toBe('');
   });
+
+  it('removes leading zeros', () => {
+    expect(cleanRut('00123456789')).toBe('123456789');
+    expect(cleanRut('0012213359-1')).toBe('122133591');
+  });
+
+  it('removes commas', () => {
+    expect(cleanRut(',0.0077262111-6')).toBe('772621116');
+  });
 });
 
 describe('getRutCheckDigit', () => {
@@ -98,6 +107,21 @@ describe('isValidRut', () => {
 
   it('rejects too long RUT', () => {
     expect(isValidRut('123456789012')).toBe(false);
+  });
+
+  describe('RUT starting with zeros', () => {
+    it('strips leading zeros and validates', () => {
+      // 0012213359-1 -> 12213359-1 (valid)
+      expect(isValidRut('0012213359-1')).toBe(true);
+    });
+
+    it('strips leading zeros from formatted RUT', () => {
+      expect(isValidRut('00.122.133-59-1')).toBe(true);
+    });
+
+    it('rejects RUT with leading zeros if check digit is wrong', () => {
+      expect(isValidRut('0012213359-0')).toBe(false);
+    });
   });
 });
 
@@ -246,6 +270,14 @@ describe('validateRut', () => {
     expect(result.valid).toBe(false);
     if (!result.valid) {
       expect(result.error).toBe('invalidChars');
+    }
+  });
+
+  it('strips leading zeros and validates', () => {
+    const result = validateRut('0012213359-1');
+    expect(result.valid).toBe(true);
+    if (result.valid) {
+      expect(result.rut).toBe('122133591');
     }
   });
 });
