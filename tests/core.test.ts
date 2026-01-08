@@ -7,6 +7,7 @@ import {
   isValidRut,
   validateRut,
 } from '../src';
+import { defaultErrorMessages } from '../src/shared/messages';
 
 describe('cleanRut', () => {
   it('removes dots and dashes', () => {
@@ -36,6 +37,15 @@ describe('cleanRut', () => {
 
   it('removes commas', () => {
     expect(cleanRut(',0.0077262111-6')).toBe('772621116');
+  });
+
+  it('removes asterisks', () => {
+    expect(cleanRut('12*345*678*k')).toBe('12345678K');
+  });
+
+  it('removes any non-alphanumeric characters', () => {
+    expect(cleanRut('18,972,631-7')).toBe('189726317');
+    expect(cleanRut('18*972*631*7')).toBe('189726317');
   });
 });
 
@@ -81,9 +91,8 @@ describe('isValidRut', () => {
   });
 
   it('validates RUT with K check digit', () => {
-    expect(isValidRut('6-K')).toBe(true);
-    expect(isValidRut('6-k')).toBe(true);
     expect(isValidRut('33.333.335-K')).toBe(true);
+    expect(isValidRut('33333335k')).toBe(true);
   });
 
   it('validates RUT with 0 check digit', () => {
@@ -109,14 +118,38 @@ describe('isValidRut', () => {
     expect(isValidRut('123456789012')).toBe(false);
   });
 
+  it('rejects too short RUT', () => {
+    expect(isValidRut('123')).toBe(false);
+    expect(isValidRut('6-K')).toBe(false);
+  });
+
+  it('rejects RUT with only zeros', () => {
+    expect(isValidRut('000')).toBe(false);
+    expect(isValidRut('0-0')).toBe(false);
+  });
+
+  it('rejects RUT with commas instead of dots', () => {
+    expect(isValidRut('18,972,631-7')).toBe(false);
+  });
+
+  it('rejects RUT with asterisks as separators', () => {
+    expect(isValidRut('18*972*631-7')).toBe(false);
+  });
+
+  it('rejects RUT with multiple dashes', () => {
+    expect(isValidRut('18-972-631-7')).toBe(false);
+  });
+
+  it('rejects RUT with additional text', () => {
+    expect(isValidRut('error18.972.631-7')).toBe(false);
+  });
+
   describe('RUT starting with zeros', () => {
     it('strips leading zeros and validates', () => {
-      // 0012213359-1 -> 12213359-1 (valid)
+      // 0012213359-1 -> 122133591 (8 digits + verifier, valid)
       expect(isValidRut('0012213359-1')).toBe(true);
-    });
-
-    it('strips leading zeros from formatted RUT', () => {
-      expect(isValidRut('00.122.133-59-1')).toBe(true);
+      // 012.213.359-1 -> 122133591 (same RUT with valid formatting)
+      expect(isValidRut('012.213.359-1')).toBe(true);
     });
 
     it('rejects RUT with leading zeros if check digit is wrong', () => {
@@ -197,6 +230,14 @@ describe('formatRut', () => {
     it('handles single digit body', () => {
       expect(formatRut('1-9', 'formatted')).toBe('1-9');
     });
+
+    it('formats RUT with asterisks as separators (permissive)', () => {
+      expect(formatRut('18*972*631*7', 'formatted')).toBe('18.972.631-7');
+    });
+
+    it('formats RUT with commas (permissive)', () => {
+      expect(formatRut('18,972,631-7', 'formatted')).toBe('18.972.631-7');
+    });
   });
 });
 
@@ -218,18 +259,34 @@ describe('validateRut', () => {
   });
 
   it('returns valid result for RUT with K check digit', () => {
-    const result = validateRut('6-K');
+    const result = validateRut('33.333.335-K');
     expect(result.valid).toBe(true);
     if (result.valid) {
-      expect(result.rut).toBe('6K');
+      expect(result.rut).toBe('33333335K');
     }
   });
 
-  it('returns invalidChars error for invalid characters', () => {
+  it('returns invalidFormat error for too short RUT', () => {
+    const result = validateRut('123');
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.error).toBe('invalidFormat');
+    }
+  });
+
+  it('returns invalidFormat error for RUT with only zeros', () => {
+    const result = validateRut('000');
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.error).toBe('invalidFormat');
+    }
+  });
+
+  it('returns invalidFormat error for invalid characters', () => {
     const result = validateRut('18.972.631-X');
     expect(result.valid).toBe(false);
     if (!result.valid) {
-      expect(result.error).toBe('invalidChars');
+      expect(result.error).toBe('invalidFormat');
     }
   });
 
@@ -257,19 +314,19 @@ describe('validateRut', () => {
     }
   });
 
-  it('returns invalidChars error for letters in body', () => {
+  it('returns invalidFormat error for letters in body', () => {
     const result = validateRut('abc123');
     expect(result.valid).toBe(false);
     if (!result.valid) {
-      expect(result.error).toBe('invalidChars');
+      expect(result.error).toBe('invalidFormat');
     }
   });
 
-  it('returns invalidChars error for empty string', () => {
+  it('returns invalidFormat error for empty string', () => {
     const result = validateRut('');
     expect(result.valid).toBe(false);
     if (!result.valid) {
-      expect(result.error).toBe('invalidChars');
+      expect(result.error).toBe('invalidFormat');
     }
   });
 
@@ -283,43 +340,40 @@ describe('validateRut', () => {
 });
 
 describe('getErrorMessage', () => {
-  it('returns default message for invalidChars', () => {
-    const message = getErrorMessage('invalidChars');
-    expect(message).toBe('RUT contiene caracteres inválidos');
-  });
-
   it('returns default message for invalidFormat', () => {
     const message = getErrorMessage('invalidFormat');
-    expect(message).toBe('Formato de RUT inválido');
+    expect(message).toBe(defaultErrorMessages.invalidFormat);
   });
 
   it('returns default message for invalidCheckDigit', () => {
     const message = getErrorMessage('invalidCheckDigit');
-    expect(message).toBe('Dígito verificador incorrecto');
+    expect(message).toBe(defaultErrorMessages.invalidCheckDigit);
   });
 
   it('returns custom message when provided', () => {
-    const message = getErrorMessage('invalidChars', {
-      invalidChars: 'Invalid characters in RUT',
+    const message = getErrorMessage('invalidFormat', {
+      invalidFormat: 'Invalid format in RUT',
     });
-    expect(message).toBe('Invalid characters in RUT');
+    expect(message).toBe('Invalid format in RUT');
   });
 
   it('merges custom messages with defaults', () => {
     const customMessages = {
-      invalidChars: 'Custom chars message',
+      invalidFormat: 'Custom format message',
     };
-    expect(getErrorMessage('invalidChars', customMessages)).toBe('Custom chars message');
-    expect(getErrorMessage('invalidFormat', customMessages)).toBe('Formato de RUT inválido');
+    expect(getErrorMessage('invalidFormat', customMessages)).toBe('Custom format message');
+    expect(getErrorMessage('invalidCheckDigit', customMessages)).toBe(
+      defaultErrorMessages.invalidCheckDigit
+    );
   });
 
   it('works with validateRut result', () => {
     const result = validateRut('invalid-rut');
     if (!result.valid) {
       const message = getErrorMessage(result.error, {
-        invalidChars: 'Invalid characters detected',
+        invalidFormat: 'Invalid format detected',
       });
-      expect(message).toBe('Invalid characters detected');
+      expect(message).toBe('Invalid format detected');
     }
   });
 });

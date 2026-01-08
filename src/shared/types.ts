@@ -1,7 +1,7 @@
 /**
  * Error types that can occur during RUT validation.
  */
-export type RutValidationError = 'invalidChars' | 'invalidFormat' | 'invalidCheckDigit';
+export type RutValidationError = 'invalidFormat' | 'invalidCheckDigit';
 
 /**
  * Output format for RUT formatting.
@@ -24,7 +24,6 @@ export type RutValidationResult =
  */
 export type RutErrorMessages = {
   required?: string;
-  invalidChars?: string;
   invalidFormat?: string;
   invalidCheckDigit?: string;
 };

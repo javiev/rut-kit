@@ -60,7 +60,7 @@ const result = validateRut('18.972.631-0')
 // { valid: false, error: 'invalidCheckDigit' }
 ```
 
-Errores posibles: `invalidChars` | `invalidFormat` | `invalidCheckDigit`
+Errores posibles: `invalidFormat` | `invalidCheckDigit`
 
 ### Formateo
 

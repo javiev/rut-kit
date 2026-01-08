@@ -8,12 +8,13 @@ import {
 } from './shared';
 
 /**
- * Removes all formatting characters from a RUT (dots, dashes, spaces, commas).
+ * Removes all formatting characters from a RUT (dots, dashes, spaces, commas, asterisks, etc).
+ * This function is permissive and accepts any separator for cleaning purposes.
  * @param rut - The RUT string to clean
  * @returns The cleaned RUT string (only digits and K)
  */
 export function cleanRut(rut: string): string {
-  const cleaned = rut.replace(/[.\-\s,]/g, '').toUpperCase();
+  const cleaned = rut.replace(/[^\dkK]/gi, '').toUpperCase();
   return cleaned.replace(/^0+/, '') || cleaned;
 }
 
@@ -45,14 +46,43 @@ export function getRutCheckDigit(rut: string): string {
 }
 
 /**
+ * Validates if a RUT string has a valid Chilean RUT format.
+ * Accepts only these formats:
+ * - XX.XXX.XXX-X (with dots and dash) - allows leading zeros
+ * - XXXXXXXX-X (without dots, with dash) - allows leading zeros
+ * - XXXXXXXXX (no formatting) - allows leading zeros
+ * @param rut - The RUT string to validate format
+ * @returns true if the format is valid, false otherwise
+ */
+function isValidRutFormat(rut: string): boolean {
+  if (typeof rut !== 'string' || rut.length === 0) {
+    return false;
+  }
+
+  // Format: XX.XXX.XXX-X or X.XXX.XXX-X (with dots and dash) - allows leading zeros
+  const withDotsRegex = /^0*\d{1,2}\.0*\d{3}\.0*\d{3}-[\dkK]$/;
+  // Format: XXXXXXXX-X or XXXXXXX-X (without dots, with dash) - allows leading zeros
+  const withDashRegex = /^0*\d{7,8}-[\dkK]$/;
+  // Format: XXXXXXXXX or XXXXXXXX (no formatting) - allows leading zeros
+  const cleanRegex = /^0*\d{7,8}[\dkK]$/;
+
+  return withDotsRegex.test(rut) || withDashRegex.test(rut) || cleanRegex.test(rut);
+}
+
+/**
  * Validates a complete Chilean RUT (including check digit).
- * @param rut - The RUT to validate, can be formatted or clean
+ * Only accepts valid Chilean RUT formats.
+ * @param rut - The RUT to validate, must be in a valid format
  * @returns true if the RUT is valid, false otherwise
  */
 export function isValidRut(rut: string): boolean {
+  if (!isValidRutFormat(rut)) {
+    return false;
+  }
+
   const cleaned = cleanRut(rut);
 
-  if (!/^[1-9]\d{0,7}[\dkK]$/.test(cleaned)) {
+  if (!/^[1-9]\d{6,7}[\dkK]$/.test(cleaned)) {
     return false;
   }
 
@@ -64,7 +94,8 @@ export function isValidRut(rut: string): boolean {
 
 /**
  * Validates a complete Chilean RUT with detailed error information.
- * @param rut - The RUT to validate, can be formatted or clean
+ * Only accepts valid Chilean RUT formats.
+ * @param rut - The RUT to validate, must be in a valid format
  * @returns Validation result with cleaned RUT if valid, or error type if invalid
  * @example
  * const result = validateRut('12.345.678-5');
@@ -75,13 +106,13 @@ export function isValidRut(rut: string): boolean {
  * }
  */
 export function validateRut(rut: string): RutValidationResult {
-  const cleaned = cleanRut(rut);
-
-  if (!/^[\dkK]+$/.test(cleaned)) {
-    return { valid: false, error: 'invalidChars' };
+  if (!isValidRutFormat(rut)) {
+    return { valid: false, error: 'invalidFormat' };
   }
 
-  if (!/^[1-9]\d{0,7}[\dkK]$/.test(cleaned)) {
+  const cleaned = cleanRut(rut);
+
+  if (!/^[1-9]\d{6,7}[\dkK]$/.test(cleaned)) {
     return { valid: false, error: 'invalidFormat' };
   }
 
@@ -104,7 +135,7 @@ export function validateRut(rut: string): RutValidationResult {
  * const result = validateRut('invalid');
  * if (!result.valid) {
  *   const message = getErrorMessage(result.error, {
- *     invalidChars: 'Invalid characters in RUT'
+ *     invalidFormat: 'Invalid RUT format'
  *   });
  *   console.log(message);
  * }
