@@ -9,6 +9,35 @@ export interface RutSchemaOptions {
   outputFormat?: RutOutputFormat;
 }
 
+/**
+ * Creates a customizable Zod schema for validating Chilean RUTs.
+ *
+ * Validates format (strict), structure, and check digit. Returns the RUT in the specified format.
+ *
+ * @param options - Configuration options
+ * @param options.messages - Custom error messages for validation errors
+ * @param options.outputFormat - Output format: 'formatted' (XX.XXX.XXX-X), 'clean' (XXXXXXXXX), or default (XXXXXXXX-X)
+ * @returns A Zod schema that validates and formats RUTs
+ *
+ * @example
+ * // Default schema
+ * const schema = createRutSchema()
+ * schema.parse('189726317')  // "18972631-7"
+ *
+ * @example
+ * // With custom messages
+ * const schema = createRutSchema({
+ *   messages: {
+ *     required: 'RUT es obligatorio',
+ *     invalidFormat: 'Formato de RUT incorrecto'
+ *   }
+ * })
+ *
+ * @example
+ * // With custom output format
+ * const schema = createRutSchema({ outputFormat: 'formatted' })
+ * schema.parse('189726317')  // "18.972.631-7"
+ */
 export function createRutSchema(options: RutSchemaOptions = {}) {
   const { messages = {}, outputFormat } = options;
   const msgs = { ...defaultErrorMessages, ...messages };
@@ -16,20 +45,27 @@ export function createRutSchema(options: RutSchemaOptions = {}) {
   return z
     .string({ error: msgs.required })
     .min(1, { error: msgs.required })
-    .transform((val) => cleanRut(val))
     .check((ctx) => {
       const val = ctx.value;
 
-      if (!/^[\dkK]+$/.test(val)) {
+      const withDotsRegex = /^0*\d{1,2}\.0*\d{3}\.0*\d{3}-[\dkK]$/;
+      const withDashRegex = /^0*\d{7,8}-[\dkK]$/;
+      const cleanRegex = /^0*\d{7,8}[\dkK]$/;
+
+      if (!withDotsRegex.test(val) && !withDashRegex.test(val) && !cleanRegex.test(val)) {
         ctx.issues.push({
           code: 'custom',
-          message: msgs.invalidChars,
+          message: msgs.invalidFormat,
           input: val,
         });
         return;
       }
+    })
+    .transform((val) => cleanRut(val))
+    .check((ctx) => {
+      const val = ctx.value;
 
-      if (!/^\d{1,8}[\dkK]$/.test(val)) {
+      if (!/^[1-9]\d{6,7}[\dkK]$/.test(val)) {
         ctx.issues.push({
           code: 'custom',
           message: msgs.invalidFormat,

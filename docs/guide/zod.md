@@ -61,7 +61,6 @@ import { createRutSchema } from "rut-kit/zod"
 const schema = createRutSchema({
   messages: {
     required: "Debes ingresar tu RUT",
-    invalidChars: "Solo números y K",
     invalidFormat: "Formato incorrecto",
     invalidCheckDigit: "Dígito incorrecto"
   },

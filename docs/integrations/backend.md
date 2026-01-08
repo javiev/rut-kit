@@ -74,4 +74,4 @@ app.post("/api/users", (req, res) => {
 })
 ```
 
-En este caso, `result.error` contiene el tipo de error (`"invalidChars"`, `"invalidFormat"`, o `"invalidCheckDigit"`) que puedes usar para construir tu propia respuesta.
+En este caso, `result.error` contiene el tipo de error (`"invalidFormat"` o `"invalidCheckDigit"`) que puedes usar para construir tu propia respuesta.

@@ -37,21 +37,25 @@ import {
 } from "rut-kit"
 ```
 
----
-
 ## `isValidRut()`
 
 Retorna `true` si el RUT es válido, `false` si no. Útil para validaciones simples donde no necesitas saber el tipo de error.
 
 ```typescript
 isValidRut("18.972.631-7")  // true
-isValidRut("18.972.631-0")  // false
-isValidRut("18.abc.631-7")  // false
+isValidRut("18972631-7")    // true
+isValidRut("189726317")     // true
+
+isValidRut("18.972.631-0")  // false (dígito verificador incorrecto)
+isValidRut("18.abc.631-7")  // false (formato inválido)
+isValidRut("18,972,631-7")  // false (comas no permitidas)
 ```
 
-Acepta cualquier formato de entrada: con puntos, sin puntos, con guión, sin guión.
+::: warning Validación Estricta
+Solo acepta formatos válidos chilenos: `18.972.631-7`, `18972631-7`, `189726317`. Otros separadores son rechazados.
 
----
+**RUT mínimo:** Solo acepta RUTs desde 1.000.000 (7 dígitos + verificador).
+:::
 
 ## `validateRut()`
 
@@ -64,8 +68,8 @@ validateRut("18.972.631-7")
 validateRut("18.972.631-0")
 // { valid: false, error: "invalidCheckDigit" }
 
-validateRut("18.abc.631-7")
-// { valid: false, error: "invalidChars" }
+validateRut("18,972,631-7")
+// { valid: false, error: "invalidFormat" }
 
 validateRut("123")
 // { valid: false, error: "invalidFormat" }
@@ -74,11 +78,10 @@ validateRut("123")
 **Tipos de error:**
 | Error | Cuándo ocurre |
 |-------|---------------|
-| `invalidChars` | Contiene caracteres no permitidos |
-| `invalidFormat` | Estructura o largo incorrecto |
+| `invalidFormat` | Formato no válido, largo incorrecto, o caracteres no permitidos |
 | `invalidCheckDigit` | Dígito verificador no coincide |
 
----
+**Tip:** Si necesitas validar RUTs con separadores no estándar (comas, asteriscos), usa `cleanRut()` primero.
 
 ## `formatRut()`
 
@@ -92,19 +95,21 @@ formatRut("189726317", "clean")     // "189726317"
 
 El formato default (sin puntos, con guión) es recomendado para almacenamiento.
 
----
-
 ## `cleanRut()`
 
-Remueve puntos, guiones, espacios y comas de un RUT. La K se convierte a mayúscula. También elimina ceros iniciales.
+Remueve **cualquier** carácter no alfanumérico de un RUT. La K se convierte a mayúscula. También elimina ceros iniciales.
 
 ```typescript
 cleanRut("18.972.631-7")  // "189726317"
 cleanRut("18972631-7")    // "189726317"
 cleanRut("33.333.335-k")  // "33333335K"
+
+// Acepta separadores no estándar
+cleanRut("18,972,631-7")  // "189726317"
+cleanRut("18*972*631*7")  // "189726317"
 ```
 
----
+**Permisivo:** A diferencia de la validación, `cleanRut()` acepta cualquier separador. Útil para limpiar datos de Excel, copiar-pegar, etc.
 
 ## `getRutCheckDigit()`
 
@@ -114,8 +119,6 @@ Calcula el dígito verificador para un número de RUT (sin el dígito). Útil pa
 getRutCheckDigit("18972631")  // "7"
 getRutCheckDigit("33333335")  // "K"
 ```
-
----
 
 ## `getErrorMessage()`
 
@@ -142,6 +145,5 @@ getErrorMessage(result.error, {
 
 | Error | Mensaje |
 |-------|---------|
-| `invalidChars` | "RUT contiene caracteres inválidos" |
 | `invalidFormat` | "Formato de RUT inválido" |
 | `invalidCheckDigit` | "Dígito verificador incorrecto" |

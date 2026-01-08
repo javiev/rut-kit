@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { defaultErrorMessages } from '../src/shared/messages';
 import { createRutSchema, rutSchema } from '../src/zod';
 
 describe('rutSchema', () => {
@@ -32,7 +33,7 @@ describe('rutSchema', () => {
     if (!result.success) {
       const issues = result.error.issues;
       expect(issues.length).toBeGreaterThan(0);
-      expect(issues[0].message).toBe('RUT es requerido');
+      expect(issues[0].message).toBe(defaultErrorMessages.required);
     }
   });
 
@@ -42,7 +43,7 @@ describe('rutSchema', () => {
     if (!result.success) {
       const issues = result.error.issues;
       expect(issues.length).toBeGreaterThan(0);
-      expect(issues[0].message).toBe('RUT contiene caracteres inválidos');
+      expect(issues[0].message).toBe(defaultErrorMessages.invalidFormat);
     }
   });
 
@@ -52,7 +53,7 @@ describe('rutSchema', () => {
     if (!result.success) {
       const issues = result.error.issues;
       expect(issues.length).toBeGreaterThan(0);
-      expect(issues[0].message).toBe('Formato de RUT inválido');
+      expect(issues[0].message).toBe(defaultErrorMessages.invalidFormat);
     }
   });
 
@@ -62,7 +63,7 @@ describe('rutSchema', () => {
     if (!result.success) {
       const issues = result.error.issues;
       expect(issues.length).toBeGreaterThan(0);
-      expect(issues[0].message).toBe('Dígito verificador incorrecto');
+      expect(issues[0].message).toBe(defaultErrorMessages.invalidCheckDigit);
     }
   });
 
@@ -73,14 +74,6 @@ describe('rutSchema', () => {
       expect(result.data).toBe('12213359-1');
     }
   });
-
-  it('handles commas from Excel paste', () => {
-    const result = rutSchema.safeParse(',0.0077262111-6');
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.data).toBe('77262111-6');
-    }
-  });
 });
 
 describe('createRutSchema', () => {
@@ -88,7 +81,6 @@ describe('createRutSchema', () => {
     const customSchema = createRutSchema({
       messages: {
         required: 'Debes ingresar tu RUT',
-        invalidChars: 'El RUT contiene caracteres inválidos',
         invalidFormat: 'El formato del RUT es incorrecto',
         invalidCheckDigit: 'El dígito verificador no coincide',
       },
@@ -100,12 +92,10 @@ describe('createRutSchema', () => {
       expect(emptyResult.error.issues[0].message).toBe('Debes ingresar tu RUT');
     }
 
-    const invalidCharsResult = customSchema.safeParse('abc');
-    expect(invalidCharsResult.success).toBe(false);
-    if (!invalidCharsResult.success) {
-      expect(invalidCharsResult.error.issues[0].message).toBe(
-        'El RUT contiene caracteres inválidos'
-      );
+    const invalidFormatTest = customSchema.safeParse('abc');
+    expect(invalidFormatTest.success).toBe(false);
+    if (!invalidFormatTest.success) {
+      expect(invalidFormatTest.error.issues[0].message).toBe('El formato del RUT es incorrecto');
     }
 
     const invalidFormatResult = customSchema.safeParse('1234567890123');
@@ -130,10 +120,10 @@ describe('createRutSchema', () => {
       },
     });
 
-    const invalidCharsResult = partialSchema.safeParse('abc');
-    expect(invalidCharsResult.success).toBe(false);
-    if (!invalidCharsResult.success) {
-      expect(invalidCharsResult.error.issues[0].message).toBe('RUT contiene caracteres inválidos');
+    const invalidFormatTest = partialSchema.safeParse('abc');
+    expect(invalidFormatTest.success).toBe(false);
+    if (!invalidFormatTest.success) {
+      expect(invalidFormatTest.error.issues[0].message).toBe(defaultErrorMessages.invalidFormat);
     }
   });
 

@@ -10,14 +10,25 @@ Usa `isValidRut` cuando solo necesitas saber si el RUT es válido:
 import { isValidRut } from "rut-kit"
 
 isValidRut("18.972.631-7")  // true
-isValidRut("18.972.631-0")  // false
-isValidRut("18.abc.631-7")  // false
+isValidRut("18972631-7")    // true
+isValidRut("189726317")     // true
+
+isValidRut("18.972.631-0")  // false (dígito verificador incorrecto)
+isValidRut("18.abc.631-7")  // false (formato inválido)
+isValidRut("18,972,631-7")  // false (comas no permitidas)
 ```
 
-Acepta cualquier formato de entrada: con puntos, sin puntos, con guión, sin guión.
+::: warning Validación Estricta
+La validación **solo acepta formatos válidos chilenos**:
+- Con puntos: `18.972.631-7`
+- Con guión: `18972631-7`
+- Sin formato: `189726317`
 
-::: tip Limpieza automática
-Se eliminan puntos, guiones, espacios, comas y ceros iniciales. Ideal para datos copiados desde otras fuentes.
+Otros separadores (comas, asteriscos, etc.) son rechazados. Para limpiar y formatear datos permisivamente, usa `cleanRut()` o `formatRut()` antes de validar.
+:::
+
+::: tip RUT Mínimo
+Solo se aceptan RUTs desde **1.000.000** (7 dígitos + verificador). RUTs más cortos son rechazados.
 :::
 
 ## Validación Detallada
@@ -33,8 +44,8 @@ validateRut("18.972.631-7")
 validateRut("18.972.631-0")
 // { valid: false, error: "invalidCheckDigit" }
 
-validateRut("18.abc.631-7")
-// { valid: false, error: "invalidChars" }
+validateRut("18,972,631-7")
+// { valid: false, error: "invalidFormat" }
 
 validateRut("123")
 // { valid: false, error: "invalidFormat" }
@@ -42,12 +53,21 @@ validateRut("123")
 
 Cuando el RUT es válido, retorna el RUT limpio (sin puntos ni guiones). Cuando es inválido, indica el tipo de error.
 
+::: tip Limpieza de Datos
+Si recibes RUTs con separadores no estándar (comas, asteriscos, etc.), usa `cleanRut()` primero:
+
+```typescript
+const dirty = "18,972,631-7"
+const clean = cleanRut(dirty)  // "189726317"
+validateRut(clean)             // { valid: true, rut: "189726317" }
+```
+:::
+
 ## Tipos de Error
 
-| Error | Significado |
-|-------|-------------|
-| `invalidChars` | Contiene letras (excepto K) u otros caracteres |
-| `invalidFormat` | Largo incorrecto o estructura inválida |
+| Error | Cuándo ocurre |
+|-------|---------------|
+| `invalidFormat` | Formato no válido, largo incorrecto, o caracteres no permitidos |
 | `invalidCheckDigit` | El dígito verificador no coincide |
 
 ## Mensajes de Error
@@ -71,7 +91,6 @@ Puedes personalizar los mensajes pasando un objeto. Solo incluye los que quieras
 
 ```typescript
 const messages = {
-  invalidChars: "Solo se permiten números y la letra K",
   invalidFormat: "El formato del RUT es incorrecto",
   invalidCheckDigit: "El RUT ingresado no es válido"
 }
@@ -83,6 +102,5 @@ getErrorMessage(result.error, messages)
 
 | Error | Mensaje |
 |-------|---------|
-| `invalidChars` | "RUT contiene caracteres inválidos" |
 | `invalidFormat` | "Formato de RUT inválido" |
 | `invalidCheckDigit` | "Dígito verificador incorrecto" |
