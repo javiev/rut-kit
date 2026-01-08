@@ -10,8 +10,8 @@ export default defineConfig({
     nav: [
       { text: 'Inicio', link: '/' },
       { text: 'Guía', link: '/guide/getting-started' },
-      { text: 'API', link: '/api/rut-kit' },
-      { text: 'Integraciones', link: '/integrations/react' }
+      { text: 'Integraciones', link: '/integrations/react' },
+      { text: 'API', link: '/api/rut-kit' }
     ],
 
     sidebar: {
@@ -39,7 +39,8 @@ export default defineConfig({
         {
           text: 'Integraciones',
           items: [
-            { text: 'React + React Hook Form', link: '/integrations/react' },
+            { text: 'React', link: '/integrations/react' },
+            { text: 'React Hook Form + Zod', link: '/integrations/react-hook-form' },
             { text: 'Next.js (App Router)', link: '/integrations/nextjs' },
             { text: 'Express & Hono', link: '/integrations/backend' }
           ]
