@@ -1,6 +1,6 @@
 {
   "name": "rut-kit",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Validador de RUT chileno con mensajes personalizados para JavaScript, TypeScript y Zod",
   "author": {
     "name": "Javier Gómez Contreras",
