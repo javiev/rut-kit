@@ -24,8 +24,6 @@ bun add rut-kit zod
 import { rutSchema, createRutSchema } from "rut-kit/zod"
 ```
 
----
-
 ## `rutSchema`
 
 Schema preconfigurado listo para usar. Acepta cualquier formato de entrada, valida el RUT completo, y retorna el formato normalizado.
@@ -52,8 +50,6 @@ El schema valida en este orden:
 3. Que tenga el formato correcto (1-8 dígitos + dígito verificador)
 4. Que el dígito verificador sea válido
 
----
-
 ## `createRutSchema()`
 
 Crea un schema personalizado cuando necesitas cambiar los mensajes de error o el formato de salida.
@@ -66,7 +62,6 @@ Crea un schema personalizado cuando necesitas cambiar los mensajes de error o el
 const schema = createRutSchema({
   messages: {
     required: "Ingresa tu RUT",
-    invalidChars: "Solo números y K",
     invalidFormat: "Formato incorrecto",
     invalidCheckDigit: "Dígito incorrecto"
   }
@@ -102,8 +97,6 @@ const schema = createRutSchema({
 })
 ```
 
----
-
 ## Opciones
 
 | Opción | Tipo | Descripción |
@@ -116,6 +109,5 @@ const schema = createRutSchema({
 | Key | Default |
 |-----|---------|
 | `required` | "RUT es requerido" |
-| `invalidChars` | "RUT contiene caracteres inválidos" |
 | `invalidFormat` | "Formato de RUT inválido" |
 | `invalidCheckDigit` | "Dígito verificador incorrecto" |
