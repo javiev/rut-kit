@@ -1,172 +1,29 @@
-# React + React Hook Form
+# React
 
-Integración con React Hook Form usando el schema de Zod para validación automática.
+Validación de RUT en React usando las funciones core de rut-kit. Ideal para formularios simples sin necesidad de librerías de validación adicionales.
 
 ::: code-group
 ```bash [npm]
-npm install rut-kit zod react-hook-form @hookform/resolvers
+npm install rut-kit
 ```
 ```bash [pnpm]
-pnpm add rut-kit zod react-hook-form @hookform/resolvers
+pnpm add rut-kit
 ```
 ```bash [bun]
-bun add rut-kit zod react-hook-form @hookform/resolvers
+bun add rut-kit
 ```
 :::
 
-## Validación con Zod
+## Validación con onBlur
 
-La forma más simple de integrar rut-kit con React Hook Form es usando el resolver de Zod. El schema valida automáticamente y los mensajes de error aparecen en `errors`.
-
-```tsx
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { rutSchema } from "rut-kit/zod"
-
-const schema = z.object({
-  rut: rutSchema
-})
-
-function Form() {
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: zodResolver(schema),
-    mode: "onSubmit",
-    reValidateMode: "onSubmit",
-    defaultValues: { rut: "" }
-  })
-
-  return (
-    <form onSubmit={handleSubmit(console.log)}>
-      <input {...register("rut")} />
-      {errors.rut && <span>{errors.rut.message}</span>}
-      <button type="submit">Enviar</button>
-    </form>
-  )
-}
-```
-
-Cuando el formulario se envía exitosamente, `data.rut` ya viene formateado y validado.
-
-::: tip
-Usa `rutSchema` con `reValidateMode: "onSubmit"` para evitar errores prematuros mientras el usuario escribe. Si el campo es requerido, valídalo en el `onSubmit` o usa un schema wrapper.
-:::
-
-### Formateo en Tiempo Real
-
-Si quieres que el input muestre el RUT formateado mientras el usuario escribe, hay dos enfoques principales:
-
-#### Enfoque 1: Destructuring onChange
-
-Extrae el `onChange` de `register` y combínalo con `formatRut`:
-
-```tsx
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { rutSchema } from "rut-kit/zod"
-import { formatRut } from "rut-kit"
-
-const schema = z.object({
-  rut: rutSchema
-})
-
-function Form() {
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
-    resolver: zodResolver(schema),
-    mode: "onSubmit",
-    reValidateMode: "onSubmit",
-    defaultValues: { rut: "" }
-  })
-
-  const { onChange, ...rest } = register("rut")
-
-  return (
-    <form onSubmit={handleSubmit(console.log)}>
-      <input
-        {...rest}
-        onChange={async (e) => {
-          const formatted = formatRut(e.target.value, "formatted")
-          setValue("rut", formatted, { shouldValidate: false })
-          await onChange(e)
-        }}
-      />
-      {errors.rut && <span>{errors.rut.message}</span>}
-      <button type="submit">Enviar</button>
-    </form>
-  )
-}
-```
-
-**Características:**
-- Más directo y con menos código
-- Perfecto para transformaciones simples
-- Debes llamar `onChange(e)` manualmente para mantener el estado de React Hook Form
-
-#### Enfoque 2: Controller
-
-Usa el componente `Controller` de React Hook Form para mayor control:
-
-```tsx
-import { useForm, Controller } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { rutSchema } from "rut-kit/zod"
-import { formatRut } from "rut-kit"
-
-const schema = z.object({
-  rut: rutSchema
-})
-
-function Form() {
-  const { control, handleSubmit, formState: { errors } } = useForm({
-    resolver: zodResolver(schema),
-    mode: "onSubmit",
-    reValidateMode: "onSubmit",
-    defaultValues: { rut: "" }
-  })
-
-  return (
-    <form onSubmit={handleSubmit(console.log)}>
-      <Controller
-        name="rut"
-        control={control}
-        render={({ field }) => (
-          <input
-            {...field}
-            onChange={(e) => {
-              const formatted = formatRut(e.target.value, "formatted")
-              field.onChange(formatted)
-            }}
-          />
-        )}
-      />
-      {errors.rut && <span>{errors.rut.message}</span>}
-      <button type="submit">Enviar</button>
-    </form>
-  )
-}
-```
-
-**Características:**
-- Enfoque oficial de React Hook Form
-- Mayor control sobre el comportamiento del campo
-- Mejor para integrar con librerías de UI de terceros (Material UI, Chakra, etc.)
-- `field.onChange()` maneja automáticamente el estado interno
-
-::: tip
-Usa `formatRut(value, "formatted")` para mostrar el RUT con puntos y guión (`12.345.678-9`) mientras el usuario escribe. El schema de Zod normalizará el formato al enviar el formulario.
-:::
-
-## Validación sin Zod
-
-Si prefieres no usar Zod, puedes validar manualmente con las funciones core. Útil para formularios simples o cuando ya tienes otra lógica de validación.
+Valida cuando el usuario sale del campo, sin interrumpir mientras escribe:
 
 ```tsx
 import { useState } from "react"
-import { validateRut, getErrorMessage } from "rut-kit"
+import { formatRut, getErrorMessage, validateRut } from "rut-kit"
 
 function Form() {
+  const [rut, setRut] = useState("")
   const [error, setError] = useState<string | null>(null)
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -174,13 +31,97 @@ function Form() {
     setError(result.valid ? null : getErrorMessage(result.error))
   }
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const result = validateRut(rut)
+
+    if (result.valid) {
+      const formattedRut = formatRut(rut, "formatted")
+      console.log({ rut: formattedRut })
+    } else {
+      setError(getErrorMessage(result.error))
+    }
+  }
+
   return (
-    <div>
-      <input onBlur={handleBlur} />
+    <form onSubmit={handleSubmit}>
+      <input
+        value={rut}
+        onChange={(e) => {
+          setRut(e.target.value)
+          setError(null)
+        }}
+        onBlur={handleBlur}
+      />
       {error && <span>{error}</span>}
-    </div>
+      <button type="submit">Enviar</button>
+    </form>
   )
 }
 ```
 
-En este caso, validas en `onBlur` para dar feedback inmediato sin interrumpir mientras el usuario escribe.
+**Características:**
+- Valida cuando el usuario sale del campo
+- No interrumpe mientras el usuario escribe
+- Mejor UX para formularios simples
+- Usa `validateRut()` y `getErrorMessage()`
+
+## Formateo Automático
+
+Formatea el RUT en tiempo real mientras el usuario escribe:
+
+```tsx
+import { useState } from "react"
+import { formatRut, getErrorMessage, validateRut } from "rut-kit"
+
+function Form() {
+  const [rut, setRut] = useState("")
+  const [error, setError] = useState<string | null>(null)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatRut(e.target.value, "formatted")
+    setRut(formatted)
+    setError(null)
+  }
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const result = validateRut(rut)
+
+    if (result.valid) {
+      console.log({ rut })
+    } else {
+      setError(getErrorMessage(result.error))
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input value={rut} onChange={handleChange} />
+      {error && <span>{error}</span>}
+      <button type="submit">Enviar</button>
+    </form>
+  )
+}
+```
+
+**Características:**
+- Formatea en tiempo real con `formatRut()`
+- Feedback visual inmediato
+- Valida al hacer submit
+- Formato siempre consistente
+
+::: tip
+El formateo automático mejora la experiencia del usuario al mostrar el formato correcto mientras escribe, pero valida solo al enviar para no interrumpir el flujo de escritura.
+:::
+
+## ¿Cuándo usar React sin librerías?
+
+- Formularios simples que no necesitan React Hook Form
+- Cuando quieres control total sobre el flujo de validación
+- Proyectos que no requieren schemas de validación complejos
+- Para validación en tiempo real (onChange, onBlur)
+
+::: info
+Si necesitas validación de formularios más compleja, considera usar [React Hook Form + Zod](/integrations/react-hook-form).
+:::
