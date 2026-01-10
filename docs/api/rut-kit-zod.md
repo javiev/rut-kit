@@ -21,7 +21,7 @@ bun add rut-kit zod
 ## Importación
 
 ```typescript
-import { rutSchema, createRutSchema } from "rut-kit/zod"
+import { rutSchema, createRutSchema } from 'rut-kit/zod'
 ```
 
 ## `rutSchema`
@@ -29,19 +29,19 @@ import { rutSchema, createRutSchema } from "rut-kit/zod"
 Schema preconfigurado listo para usar. Acepta cualquier formato de entrada, valida el RUT completo, y retorna el formato normalizado.
 
 ```typescript
-rutSchema.parse("18.972.631-7")
-// "18972631-7"
+rutSchema.parse('18.972.631-7')
+// '18972631-7'
 
-rutSchema.parse("189726317")
-// "18972631-7"
+rutSchema.parse('189726317')
+// '18972631-7'
 ```
 
 Si el RUT es inválido, lanza un `ZodError` con el mensaje correspondiente en español:
 
 ```typescript
-rutSchema.safeParse("18.972.631-0")
+rutSchema.safeParse('18.972.631-0')
 // { success: false, error: ZodError }
-// error.issues[0].message → "Dígito verificador incorrecto"
+// error.issues[0].message → 'Dígito verificador incorrecto'
 ```
 
 El schema valida en este orden:
@@ -61,9 +61,9 @@ Crea un schema personalizado cuando necesitas cambiar los mensajes de error o el
 ```typescript
 const schema = createRutSchema({
   messages: {
-    required: "Ingresa tu RUT",
-    invalidFormat: "Formato incorrecto",
-    invalidCheckDigit: "Dígito incorrecto"
+    required: 'Ingresa tu RUT',
+    invalidFormat: 'Formato incorrecto',
+    invalidCheckDigit: 'Dígito incorrecto'
   }
 })
 ```
@@ -76,14 +76,14 @@ Por defecto, el schema retorna el formato `18972631-7` (sin puntos, con guión).
 
 ```typescript
 // Para mostrar al usuario
-const displaySchema = createRutSchema({ outputFormat: "formatted" })
-displaySchema.parse("189726317")
-// "18.972.631-7"
+const displaySchema = createRutSchema({ outputFormat: 'formatted' })
+displaySchema.parse('189726317')
+// '18.972.631-7'
 
 // Para APIs que requieren solo números
-const apiSchema = createRutSchema({ outputFormat: "clean" })
-apiSchema.parse("18.972.631-7")
-// "189726317"
+const apiSchema = createRutSchema({ outputFormat: 'clean' })
+apiSchema.parse('18.972.631-7')
+// '189726317'
 ```
 
 ### Combinando Opciones
@@ -92,8 +92,8 @@ Puedes usar ambas opciones juntas:
 
 ```typescript
 const schema = createRutSchema({
-  messages: { required: "RUT requerido" },
-  outputFormat: "formatted"
+  messages: { required: 'RUT requerido' },
+  outputFormat: 'formatted'
 })
 ```
 
@@ -102,12 +102,12 @@ const schema = createRutSchema({
 | Opción | Tipo | Descripción |
 |--------|------|-------------|
 | `messages` | `object` | Mensajes de error personalizados |
-| `outputFormat` | `"formatted"` \| `"clean"` | Formato del RUT retornado |
+| `outputFormat` | `'formatted'` \| `'clean'` | Formato del RUT retornado |
 
 **Mensajes disponibles:**
 
 | Key | Default |
 |-----|---------|
-| `required` | "RUT es requerido" |
-| `invalidFormat` | "Formato de RUT inválido" |
-| `invalidCheckDigit` | "Dígito verificador incorrecto" |
+| `required` | 'RUT es requerido' |
+| `invalidFormat` | 'Formato de RUT inválido' |
+| `invalidCheckDigit` | 'Dígito verificador incorrecto' |

@@ -19,10 +19,10 @@ bun add rut-kit zod
 Los Server Actions permiten validar formularios directamente en el servidor. El schema de Zod valida y formatea el RUT antes de procesarlo.
 
 ```typescript
-"use server"
+'use server'
 
-import { z } from "zod"
-import { rutSchema } from "rut-kit/zod"
+import { z } from 'zod'
+import { rutSchema } from 'rut-kit/zod'
 
 const schema = z.object({
   rut: rutSchema
@@ -30,7 +30,7 @@ const schema = z.object({
 
 export async function action(formData: FormData) {
   const result = schema.safeParse({
-    rut: formData.get("rut")
+    rut: formData.get('rut')
   })
 
   if (!result.success) {
@@ -38,7 +38,7 @@ export async function action(formData: FormData) {
   }
 
   // result.data.rut ya viene validado y formateado
-  // "18972631-7"
+  // '18972631-7'
 }
 ```
 
@@ -49,9 +49,9 @@ Usa `safeParse` para manejar errores sin lanzar excepciones. El método `flatten
 Para endpoints REST, el patrón es similar. Valida el body de la request y retorna errores con el status code apropiado.
 
 ```typescript
-import { NextRequest, NextResponse } from "next/server"
-import { z } from "zod"
-import { rutSchema } from "rut-kit/zod"
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+import { rutSchema } from 'rut-kit/zod'
 
 const schema = z.object({
   rut: rutSchema
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  // result.data.rut → "18972631-7"
+  // result.data.rut → '18972631-7'
   return NextResponse.json({ success: true })
 }
 ```
