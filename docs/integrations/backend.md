@@ -2,6 +2,18 @@
 
 Validación de RUTs en APIs backend. Ambos frameworks siguen patrones similares.
 
+::: code-group
+```bash [npm]
+npm install rut-kit zod
+```
+```bash [pnpm]
+pnpm add rut-kit zod
+```
+```bash [bun]
+bun add rut-kit zod
+```
+:::
+
 ## Express
 
 Valida el body de la request usando el schema de Zod. Los errores se retornan con status 400.

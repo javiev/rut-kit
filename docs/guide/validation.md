@@ -1,106 +1,66 @@
 # Validación
 
-rut-kit ofrece dos formas de validar RUTs: una simple que retorna `true/false`, y una detallada que indica el tipo de error.
+rut-kit ofrece dos formas de validar RUTs según lo que necesites saber.
 
-## Validación Simple
+## ¿Solo necesitas saber si es válido?
 
-Usa `isValidRut` cuando solo necesitas saber si el RUT es válido:
+Usa `isValidRut`:
 
 ```typescript
 import { isValidRut } from 'rut-kit'
 
-isValidRut('18.972.631-7')  // true
-isValidRut('18972631-7')    // true
-isValidRut('189726317')     // true
-
-isValidRut('18.972.631-0')  // false (dígito verificador incorrecto)
-isValidRut('18.abc.631-7')  // false (formato inválido)
-isValidRut('18,972,631-7')  // false (comas no permitidas)
+if (isValidRut(input)) {
+  // RUT válido
+}
 ```
 
-::: warning Validación Estricta
-La validación **solo acepta formatos válidos chilenos**:
-- Con puntos: `18.972.631-7`
-- Con guión: `18972631-7`
-- Sin formato: `189726317`
+## ¿Necesitas saber qué falló?
 
-Otros separadores (comas, asteriscos, etc.) son rechazados. Para limpiar y formatear datos permisivamente, usa `cleanRut()` o `formatRut()` antes de validar.
-:::
-
-::: tip RUT Mínimo
-Solo se aceptan RUTs desde **1.000.000** (7 dígitos + verificador). RUTs más cortos son rechazados.
-:::
-
-## Validación Detallada
-
-Usa `validateRut` cuando necesitas saber *por qué* un RUT es inválido:
-
-```typescript
-import { validateRut } from 'rut-kit'
-
-validateRut('18.972.631-7')
-// { valid: true, rut: '189726317' }
-
-validateRut('18.972.631-0')
-// { valid: false, error: 'invalidCheckDigit' }
-
-validateRut('18,972,631-7')
-// { valid: false, error: 'invalidFormat' }
-
-validateRut('123')
-// { valid: false, error: 'invalidFormat' }
-```
-
-Cuando el RUT es válido, retorna el RUT limpio (sin puntos ni guiones). Cuando es inválido, indica el tipo de error.
-
-::: tip Limpieza de Datos
-Si recibes RUTs con separadores no estándar (comas, asteriscos, etc.), usa `cleanRut()` primero:
-
-```typescript
-const dirty = '18,972,631-7'
-const clean = cleanRut(dirty)  // '189726317'
-validateRut(clean)             // { valid: true, rut: '189726317' }
-```
-:::
-
-## Tipos de Error
-
-| Error | Cuándo ocurre |
-|-------|---------------|
-| `invalidFormat` | Formato no válido, largo incorrecto, o caracteres no permitidos |
-| `invalidCheckDigit` | El dígito verificador no coincide |
-
-## Mensajes de Error
-
-Usa `getErrorMessage` para convertir el tipo de error a un mensaje legible. Los mensajes por defecto están en español.
+Usa `validateRut` + `getErrorMessage`:
 
 ```typescript
 import { validateRut, getErrorMessage } from 'rut-kit'
 
-const result = validateRut('18.972.631-0')
+const result = validateRut(input)
 
-if (!result.valid) {
-  getErrorMessage(result.error)
-  // 'Dígito verificador incorrecto'
+if (result.valid) {
+  console.log(result.rut) // RUT limpio: '189726317'
+} else {
+  console.log(getErrorMessage(result.error))
+  // 'Formato de RUT inválido' o 'Dígito verificador incorrecto'
 }
 ```
 
-### Mensajes Personalizados
+## ¿Tienes datos con separadores raros?
 
-Puedes personalizar los mensajes pasando un objeto. Solo incluye los que quieras cambiar:
+Si recibes RUTs de Excel, PDFs u otras fuentes con comas o asteriscos, limpia primero:
 
 ```typescript
-const messages = {
-  invalidFormat: 'El formato del RUT es incorrecto',
-  invalidCheckDigit: 'El RUT ingresado no es válido'
-}
+import { cleanRut, validateRut } from 'rut-kit'
 
-getErrorMessage(result.error, messages)
+const dirty = '18,972,631-7'
+const clean = cleanRut(dirty)  // '189726317'
+validateRut(clean)             // { valid: true, rut: '189726317' }
 ```
 
-### Mensajes por Defecto
+::: tip Permisivo vs Estricto
+- `cleanRut()` es **permisivo**: acepta cualquier separador
+- `validateRut()` es **estricto**: solo formatos chilenos válidos
 
-| Error | Mensaje |
-|-------|---------|
-| `invalidFormat` | 'Formato de RUT inválido' |
-| `invalidCheckDigit` | 'Dígito verificador incorrecto' |
+Flujo recomendado para datos sucios: `cleanRut()` → `validateRut()`
+:::
+
+## Mensajes personalizados
+
+Puedes cambiar los mensajes de error:
+
+```typescript
+getErrorMessage(result.error, {
+  invalidFormat: 'Revisa el formato del RUT',
+  invalidCheckDigit: 'El RUT no es válido'
+})
+```
+
+---
+
+→ Ver referencia completa en [API rut-kit](/api/rut-kit)

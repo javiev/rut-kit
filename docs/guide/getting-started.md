@@ -1,6 +1,6 @@
 # Inicio Rápido
 
-rut-kit valida RUTs chilenos con errores descriptivos. En lugar de solo `true/false`, te dice exactamente qué ajustar: caracteres inválidos, formato incorrecto o dígito verificador erróneo.
+rut-kit valida RUTs chilenos con errores descriptivos. En lugar de solo `true/false`, te dice exactamente qué falló.
 
 ## Instalación
 
@@ -16,37 +16,36 @@ bun add rut-kit
 ```
 :::
 
-Requiere Node.js >= 18.13 (o Bun, Edge, navegador).
-
-## Uso Básico
+## Validar un RUT
 
 ```typescript
 import { validateRut } from 'rut-kit'
 
-validateRut('18.972.631-7')
-// { valid: true, rut: '189726317' }
+const result = validateRut('18.972.631-7')
 
-validateRut('18.972.631-0')
-// { valid: false, error: 'invalidCheckDigit' }
+if (result.valid) {
+  console.log(result.rut) // '189726317'
+} else {
+  console.log(result.error) // 'invalidFormat' o 'invalidCheckDigit'
+}
 ```
 
-El error indica exactamente qué falló, permitiendo mostrar mensajes claros al usuario.
+## Formatear un RUT
+
+```typescript
+import { formatRut } from 'rut-kit'
+
+formatRut('189726317')              // '18972631-7'
+formatRut('189726317', 'formatted') // '18.972.631-7'
+```
 
 ## Con Zod
 
-Si usas Zod, instala ambas dependencias:
+Si usas Zod para validación de formularios:
 
-::: code-group
-```bash [npm]
+```bash
 npm install rut-kit zod
 ```
-```bash [pnpm]
-pnpm add rut-kit zod
-```
-```bash [bun]
-bun add rut-kit zod
-```
-:::
 
 ```typescript
 import { rutSchema } from 'rut-kit/zod'
@@ -55,8 +54,12 @@ rutSchema.parse('18.972.631-7')
 // '18972631-7'
 ```
 
-## Siguiente Paso
+::: warning Librería Agnóstica
+**rut-kit** funciona con cualquier framework de JavaScript. Los ejemplos de integración son para los frameworks que hemos probado, pero puedes usarla en Vue, Svelte, Angular, etc. de la misma forma.
+:::
 
-- [Validación](/guide/validation) - `isValidRut`, `validateRut`, `getErrorMessage`
-- [Formateo](/guide/formatting) - `formatRut`, `cleanRut`, `getRutCheckDigit`
-- [Zod](/guide/zod) - Schema para formularios y APIs
+## Siguiente paso
+
+- [Validación](/guide/validation) — Cuándo usar `isValidRut` vs `validateRut`
+- [Formateo](/guide/formatting) — Formatos de salida y limpieza de datos
+- [Zod](/guide/zod) — Schema para formularios y APIs

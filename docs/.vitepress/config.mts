@@ -91,8 +91,8 @@ export default defineConfig({
     sidebarMenuLabel: 'Menú',
 
     footer: {
-      message: 'Liberado bajo licencia ¿?',
-      copyright: 'Copyright © 2026-presente'
+      message: 'Liberado bajo <a href="https://github.com/javiev/rut-kit/blob/main/LICENSE">Licencia MIT</a>',
+      copyright: 'Copyright © 2026'
     }
   },
 
