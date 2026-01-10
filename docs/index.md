@@ -2,9 +2,9 @@
 layout: home
 
 hero:
-  name: "rut-kit 🇨🇱"
-  text: "Validación de RUT chileno"
-  tagline: "Rápido, liviano, con errores descriptivos y soporte para Zod."
+  name: 'rut-kit 🇨🇱'
+  text: 'Validación de RUT chileno'
+  tagline: 'Rápido, liviano, con errores descriptivos y soporte para Zod.'
   image:
     src: /rut-kit.png
     alt: rut-kit

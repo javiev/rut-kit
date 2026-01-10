@@ -19,11 +19,11 @@ bun add rut-kit
 Valida cuando el usuario sale del campo, sin interrumpir mientras escribe:
 
 ```tsx
-import { useState } from "react"
-import { formatRut, getErrorMessage, validateRut } from "rut-kit"
+import { useState } from 'react'
+import { formatRut, getErrorMessage, validateRut } from 'rut-kit'
 
 function Form() {
-  const [rut, setRut] = useState("")
+  const [rut, setRut] = useState('')
   const [error, setError] = useState<string | null>(null)
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -36,7 +36,7 @@ function Form() {
     const result = validateRut(rut)
 
     if (result.valid) {
-      const formattedRut = formatRut(rut, "formatted")
+      const formattedRut = formatRut(rut, 'formatted')
       console.log({ rut: formattedRut })
     } else {
       setError(getErrorMessage(result.error))
@@ -54,7 +54,7 @@ function Form() {
         onBlur={handleBlur}
       />
       {error && <span>{error}</span>}
-      <button type="submit">Enviar</button>
+      <button type='submit'>Enviar</button>
     </form>
   )
 }
@@ -71,15 +71,15 @@ function Form() {
 Formatea el RUT en tiempo real mientras el usuario escribe:
 
 ```tsx
-import { useState } from "react"
-import { formatRut, getErrorMessage, validateRut } from "rut-kit"
+import { useState } from 'react'
+import { formatRut, getErrorMessage, validateRut } from 'rut-kit'
 
 function Form() {
-  const [rut, setRut] = useState("")
+  const [rut, setRut] = useState('')
   const [error, setError] = useState<string | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatRut(e.target.value, "formatted")
+    const formatted = formatRut(e.target.value, 'formatted')
     setRut(formatted)
     setError(null)
   }
@@ -99,7 +99,7 @@ function Form() {
     <form onSubmit={handleSubmit}>
       <input value={rut} onChange={handleChange} />
       {error && <span>{error}</span>}
-      <button type="submit">Enviar</button>
+      <button type='submit'>Enviar</button>
     </form>
   )
 }

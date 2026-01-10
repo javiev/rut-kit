@@ -11,7 +11,8 @@ export default defineConfig({
       { text: 'Inicio', link: '/' },
       { text: 'Guía', link: '/guide/getting-started' },
       { text: 'Integraciones', link: '/integrations/react' },
-      { text: 'API', link: '/api/rut-kit' }
+      { text: 'API', link: '/api/rut-kit' },
+      { text: 'v0.4.0', link: 'https://github.com/javiev/rut-kit/releases' }
     ],
 
     sidebar: {
@@ -49,7 +50,8 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/javiev/rut-kit' }
+      { icon: 'github', link: 'https://github.com/javiev/rut-kit' },
+      { icon: 'npm', link: 'https://www.npmjs.com/package/rut-kit' }
     ],
 
     search: {
