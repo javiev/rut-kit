@@ -34,9 +34,10 @@ bun add rut-kit zod
 
 ## Características
 
-- **Errores Descriptivos** 🎯 - Indica qué está mal: caracteres inválidos, formato incorrecto o dígito verificador erróneo.
+- **Errores Descriptivos** 🎯 - Indica qué está mal: formato incorrecto o dígito verificador erróneo.
 - **Ultraliviano** ⚡ - 960 bytes gzipped. Sin dependencias. Solo lo esencial.
 - **Multi-runtime** 🌍 - Funciona en Node.js, Bun, Edge y el navegador.
+- **Agnóstico** 🔌 - Funciona con cualquier framework: React, Vue, Svelte, Angular, etc.
 - **TypeScript Nativo** 🔷 - Escrito en TypeScript. Tipos incluidos. Autocompletado completo.
 - **Integración Zod** 🛡️ - Schema listo para formularios y APIs. Valida, transforma y formatea en un paso.
 
@@ -90,4 +91,4 @@ const schema = createRutSchema({
 
 ## Documentación
 
-Visita la [documentación completa](https://javiev.github.io/rut-kit/) para guías detalladas e integraciones con React, Next.js, Express y más.
+Visita la [documentación completa](https://rut-kit.pages.dev/) para guías detalladas e integraciones con React, Next.js, Express y más.

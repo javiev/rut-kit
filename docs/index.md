@@ -6,7 +6,7 @@ hero:
   text: 'Validación de RUT chileno'
   tagline: 'Rápido, liviano, con errores descriptivos y soporte para Zod.'
   image:
-    src: /rut-kit.png
+    src: /new-rut-kit.png
     alt: rut-kit
   actions:
     - theme: brand
@@ -19,7 +19,7 @@ hero:
 features:
   - icon: 🎯
     title: Errores Descriptivos
-    details: Te dice exactamente qué ajustar (caracteres, formato o dígito verificador) en lugar de solo true/false.
+    details: Te dice exactamente qué falló (formato o dígito verificador) en lugar de solo true/false.
 
   - icon: ⚡
     title: Ultraliviano

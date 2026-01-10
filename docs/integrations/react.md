@@ -1,5 +1,9 @@
 # React
 
+::: warning Librería Agnóstica
+**rut-kit** funciona con cualquier framework de JavaScript. Estos ejemplos son para los frameworks que hemos probado, pero puedes usarla en Vue, Svelte, Angular, etc. de la misma forma.
+:::
+
 Validación de RUT en React usando las funciones core de rut-kit. Ideal para formularios simples sin necesidad de librerías de validación adicionales.
 
 ::: code-group
@@ -20,7 +24,7 @@ Valida cuando el usuario sale del campo, sin interrumpir mientras escribe:
 
 ```tsx
 import { useState } from 'react'
-import { formatRut, getErrorMessage, validateRut } from 'rut-kit'
+import { getErrorMessage, validateRut } from 'rut-kit'
 
 function Form() {
   const [rut, setRut] = useState('')
@@ -36,8 +40,7 @@ function Form() {
     const result = validateRut(rut)
 
     if (result.valid) {
-      const formattedRut = formatRut(rut, 'formatted')
-      console.log({ rut: formattedRut })
+      console.log({ rut: result.rut })
     } else {
       setError(getErrorMessage(result.error))
     }
