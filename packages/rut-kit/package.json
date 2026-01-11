@@ -1,0 +1,99 @@
+{
+  "name": "rut-kit",
+  "version": "0.4.0",
+  "description": "Validador de RUT chileno con mensajes personalizados para JavaScript, TypeScript y Zod",
+  "author": {
+    "name": "Javier Gómez Contreras",
+    "email": "hola@javiev.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/javiev/rut-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/javiev/rut-kit/issues"
+  },
+  "homepage": "https://rut-kit.pages.dev/",
+  "keywords": [
+    "rut",
+    "run",
+    "chile",
+    "chilean",
+    "validation",
+    "validator",
+    "validar",
+    "format",
+    "formatter",
+    "digito-verificador",
+    "check-digit",
+    "zod",
+    "schema",
+    "typescript",
+    "javascript",
+    "nodejs",
+    "deno",
+    "bun",
+    "browser",
+    "esm"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./zod": {
+      "import": {
+        "types": "./dist/zod.d.ts",
+        "default": "./dist/zod.js"
+      },
+      "require": {
+        "types": "./dist/zod.d.cts",
+        "default": "./dist/zod.cjs"
+      }
+    }
+  },
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write ."
+  },
+  "lint-staged": {
+    "*.{js,ts}": "biome check --write"
+  },
+  "engines": {
+    "node": ">=18.13.0"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.16",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16",
+    "zod": "^4.3.5"
+  },
+  "peerDependencies": {
+    "zod": "^4.3.5"
+  },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": true
+    }
+  }
+}

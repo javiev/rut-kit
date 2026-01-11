@@ -93,17 +93,6 @@ const schema = createRutSchema({
 
 Visita la [documentación completa](https://rut-kit.pages.dev/) para guías detalladas e integraciones con React, Next.js, Express y más.
 
-## Estructura del Proyecto
-
-```
-rut-kit/
-├── packages/
-│   └── rut-kit/           # Librería principal (rut-kit)
-├── apps/
-│   └── docs/              # Documentación VitePress
-└── ...
-```
-
 ## Licencia
 
 MIT © [Javier Gómez Contreras](https://github.com/javiev)
