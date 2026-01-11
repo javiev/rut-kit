@@ -3,7 +3,8 @@
   "vcs": {
     "enabled": true,
     "clientKind": "git",
-    "useIgnoreFile": true
+    "useIgnoreFile": false,
+    "root": "../.."
   },
   "files": {
     "includes": ["src/**/*.ts", "tests/**/*.ts", "!package.json"]

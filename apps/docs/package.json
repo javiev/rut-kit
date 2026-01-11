@@ -13,6 +13,9 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.26.2",
+  "dependencies": {
+    "rut-kit": "workspace:*"
+  },
   "devDependencies": {
     "vitepress": "2.0.0-alpha.15"
   }
