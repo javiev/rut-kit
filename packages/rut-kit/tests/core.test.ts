@@ -7,7 +7,7 @@ import {
   isValidRut,
   validateRut,
 } from '../src';
-import { defaultErrorMessages } from '../src/shared/messages';
+import { defaultErrorMessages } from '../src/shared';
 
 describe('cleanRut', () => {
   it('removes dots and dashes', () => {
@@ -145,15 +145,28 @@ describe('isValidRut', () => {
   });
 
   describe('RUT starting with zeros', () => {
-    it('strips leading zeros and validates', () => {
-      // 0012213359-1 -> 122133591 (8 digits + verifier, valid)
+    it('allows max 2 leading zeros in clean/dash format', () => {
       expect(isValidRut('0012213359-1')).toBe(true);
-      // 012.213.359-1 -> 122133591 (same RUT with valid formatting)
-      expect(isValidRut('012.213.359-1')).toBe(true);
+      expect(isValidRut('00122133591')).toBe(true);
+    });
+
+    it('allows 1 leading zero in dot format (0X pattern)', () => {
+      expect(isValidRut('01.234.567-4')).toBe(true);
+      expect(isValidRut('09.999.999-3')).toBe(true);
     });
 
     it('rejects RUT with leading zeros if check digit is wrong', () => {
       expect(isValidRut('0012213359-0')).toBe(false);
+    });
+
+    it('rejects RUT with more than 2 leading zeros', () => {
+      expect(isValidRut('000122133591')).toBe(false);
+      expect(isValidRut('0001221335-1')).toBe(false);
+    });
+
+    it('rejects RUT with more than 1 leading zero in dot format', () => {
+      expect(isValidRut('001.221.335-1')).toBe(false);
+      expect(isValidRut('00.221.335-1')).toBe(false);
     });
   });
 });
@@ -335,6 +348,22 @@ describe('validateRut', () => {
     expect(result.valid).toBe(true);
     if (result.valid) {
       expect(result.rut).toBe('122133591');
+    }
+  });
+
+  it('rejects RUT with too many leading zeros', () => {
+    const result = validateRut('000122133591');
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.error).toBe('invalidFormat');
+    }
+  });
+
+  it('rejects RUT that passes format but becomes too short after cleaning', () => {
+    const result = validateRut('000000001-9');
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.error).toBe('invalidFormat');
     }
   });
 });
