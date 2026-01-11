@@ -59,12 +59,15 @@ function isValidRutFormat(rut: string): boolean {
     return false;
   }
 
-  // Format: XX.XXX.XXX-X or X.XXX.XXX-X (with dots and dash) - allows leading zeros
-  const withDotsRegex = /^0*\d{1,2}\.0*\d{3}\.0*\d{3}-[\dkK]$/;
-  // Format: XXXXXXXX-X or XXXXXXX-X (without dots, with dash) - allows leading zeros
-  const withDashRegex = /^0*\d{7,8}-[\dkK]$/;
-  // Format: XXXXXXXXX or XXXXXXXX (no formatting) - allows leading zeros
-  const cleanRegex = /^0*\d{7,8}[\dkK]$/;
+  // Format: XX.XXX.XXX-X or X.XXX.XXX-X (with dots and dash)
+  // Allows max 1 leading zero: either 0X (e.g., "01.234.567-8") or 1-2 digits without leading zero
+  const withDotsRegex = /^(?:0\d|\d{1,2})\.\d{3}\.\d{3}-[\dkK]$/;
+  // Format: XXXXXXXX-X or XXXXXXX-X (without dots, with dash)
+  // Allows max 2 leading zeros (e.g., "001234567-8")
+  const withDashRegex = /^0{0,2}\d{7,8}-[\dkK]$/;
+  // Format: XXXXXXXXX or XXXXXXXX (no formatting)
+  // Allows max 2 leading zeros (e.g., "0012345678")
+  const cleanRegex = /^0{0,2}\d{7,8}[\dkK]$/;
 
   return withDotsRegex.test(rut) || withDashRegex.test(rut) || cleanRegex.test(rut);
 }

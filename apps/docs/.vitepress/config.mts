@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import pkg from '../../../packages/rut-kit/package.json'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -12,7 +13,7 @@ export default defineConfig({
       { text: 'Guía', link: '/guide/getting-started' },
       { text: 'Integraciones', link: '/integrations/react' },
       { text: 'API', link: '/api/rut-kit' },
-      { text: 'v0.4.0', link: 'https://github.com/javiev/rut-kit/releases' }
+      { text: `v${pkg.version}`, link: 'https://github.com/javiev/rut-kit/releases' }
     ],
 
     sidebar: {

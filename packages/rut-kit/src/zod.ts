@@ -48,9 +48,10 @@ export function createRutSchema(options: RutSchemaOptions = {}) {
     .check((ctx) => {
       const val = ctx.value;
 
-      const withDotsRegex = /^0*\d{1,2}\.0*\d{3}\.0*\d{3}-[\dkK]$/;
-      const withDashRegex = /^0*\d{7,8}-[\dkK]$/;
-      const cleanRegex = /^0*\d{7,8}[\dkK]$/;
+      // Allows max 1 leading zero: either 0X (e.g., "01.234.567-8") or 1-2 digits without leading zero
+      const withDotsRegex = /^(?:0\d|\d{1,2})\.\d{3}\.\d{3}-[\dkK]$/;
+      const withDashRegex = /^0{0,2}\d{7,8}-[\dkK]$/;
+      const cleanRegex = /^0{0,2}\d{7,8}[\dkK]$/;
 
       if (!withDotsRegex.test(val) && !withDashRegex.test(val) && !cleanRegex.test(val)) {
         ctx.issues.push({

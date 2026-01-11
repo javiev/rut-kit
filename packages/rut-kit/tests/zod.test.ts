@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { defaultErrorMessages } from '../src/shared/messages';
+import { defaultErrorMessages } from '../src/shared';
 import { createRutSchema, rutSchema } from '../src/zod';
 
 describe('rutSchema', () => {
@@ -67,11 +67,31 @@ describe('rutSchema', () => {
     }
   });
 
-  it('strips leading zeros', () => {
+  it('strips leading zeros (max 2)', () => {
     const result = rutSchema.safeParse('0012213359-1');
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data).toBe('12213359-1');
+    }
+  });
+
+  it('rejects RUT with too many leading zeros', () => {
+    const result = rutSchema.safeParse('000122133591');
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const issues = result.error.issues;
+      expect(issues.length).toBeGreaterThan(0);
+      expect(issues[0].message).toBe(defaultErrorMessages.invalidFormat);
+    }
+  });
+
+  it('rejects RUT that passes format but becomes too short after cleaning', () => {
+    const result = rutSchema.safeParse('000000001-9');
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const issues = result.error.issues;
+      expect(issues.length).toBeGreaterThan(0);
+      expect(issues[0].message).toBe(defaultErrorMessages.invalidFormat);
     }
   });
 });
