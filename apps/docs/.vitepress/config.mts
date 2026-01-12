@@ -3,7 +3,7 @@ import pkg from '../../../packages/rut-kit/package.json'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "rut-kit 🇨🇱",
+  title: "rut-kit 🇨🇱 - Validación de RUT chileno con errores detallados para JavaScript y TypeScript",
   description: "Validación de RUT chileno con errores detallados para JavaScript y TypeScript",
   lang: 'es',
   themeConfig: {
