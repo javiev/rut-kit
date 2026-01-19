@@ -95,6 +95,13 @@ const schema = createRutSchema({
 
 Visit the [full documentation](https://rut-kit.pages.dev/en/) for detailed guides and integrations with React, Next.js, Express, and more.
 
+## LLMs
+
+If you use AI assistants, you can provide them with full documentation context:
+
+- [llms.txt](https://rut-kit.pages.dev/llms.txt) - Documentation index
+- [llms-full.txt](https://rut-kit.pages.dev/llms-full.txt) - Complete documentation in a single file
+
 ## License
 
 MIT

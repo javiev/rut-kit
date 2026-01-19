@@ -53,7 +53,8 @@ Fast, lightweight, with Zod support.
                 { text: 'Inicio Rápido', link: '/guide/getting-started' },
                 { text: 'Validación', link: '/guide/validation' },
                 { text: 'Formateo', link: '/guide/formatting' },
-                { text: 'Zod', link: '/guide/zod' }
+                { text: 'Zod', link: '/guide/zod' },
+                { text: 'LLMs', link: '/guide/llms' }
               ]
             }
           ],
@@ -132,7 +133,8 @@ Fast, lightweight, with Zod support.
                 { text: 'Getting Started', link: '/en/guide/getting-started' },
                 { text: 'Validation', link: '/en/guide/validation' },
                 { text: 'Formatting', link: '/en/guide/formatting' },
-                { text: 'Zod', link: '/en/guide/zod' }
+                { text: 'Zod', link: '/en/guide/zod' },
+                { text: 'LLMs', link: '/en/guide/llms' }
               ]
             }
           ],
