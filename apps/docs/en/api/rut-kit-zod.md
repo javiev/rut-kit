@@ -36,7 +36,7 @@ rutSchema.parse('189726317')
 
 rutSchema.safeParse('18.972.631-0')
 // { success: false, error: ZodError }
-// error.issues[0].message → 'Invalid check digit'
+// error.issues[0].message: 'Invalid check digit'
 ```
 
 ### Error Messages

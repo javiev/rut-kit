@@ -22,7 +22,7 @@ function isValidRut(rut: string): boolean
 
 ### Return
 
-`boolean` — `true` if the RUT is valid, `false` otherwise.
+`boolean` - `true` if the RUT is valid, `false` otherwise.
 
 ### Accepted Formats
 
@@ -60,7 +60,7 @@ function validateRut(rut: string): RutValidationResult
 
 ### Return
 
-`RutValidationResult` — Object with the validation result:
+`RutValidationResult` - Object with the validation result:
 
 ```typescript
 // If valid
@@ -117,7 +117,7 @@ function formatRut(rut: string, format?: RutOutputFormat): string
 
 ### Return
 
-`string` — Formatted RUT.
+`string` - Formatted RUT.
 
 ### Example
 
@@ -149,7 +149,7 @@ function cleanRut(rut: string): string
 
 ### Return
 
-`string` — Clean RUT (only digits and uppercase K). Removes leading zeros.
+`string` - Clean RUT (only digits and uppercase K). Removes leading zeros.
 
 ### Example
 
@@ -182,7 +182,7 @@ function getRutCheckDigit(rut: string): string
 
 ### Return
 
-`string` — Calculated check digit (`'0'`-`'9'` or `'K'`).
+`string` - Calculated check digit (`'0'`-`'9'` or `'K'`).
 
 ### Example
 
@@ -211,7 +211,7 @@ function getErrorMessage(error: RutValidationError, messages?: RutErrorMessages)
 
 ### Return
 
-`string` — Human-readable error message.
+`string` - Human-readable error message.
 
 ### Default Messages
 

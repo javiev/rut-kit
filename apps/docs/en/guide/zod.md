@@ -73,4 +73,4 @@ apiSchema.parse('18.972.631-7')
 
 ---
 
-→ See full reference at [API rut-kit/zod](/en/api/rut-kit-zod)
+See full reference at [API rut-kit/zod](/en/api/rut-kit-zod)

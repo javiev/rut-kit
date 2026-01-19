@@ -1,5 +1,7 @@
 ---
 layout: home
+title: rut-kit - Chilean RUT Validation
+description: Fast, lightweight Chilean RUT validation with descriptive errors and Zod support.
 
 hero:
   name: 'rut-kit 🇨🇱'

@@ -47,7 +47,7 @@ validateRut(clean)             // { valid: true, rut: '189726317' }
 - `cleanRut()` is **permissive**: accepts any separator
 - `validateRut()` is **strict**: only valid Chilean formats
 
-Recommended flow for dirty data: `cleanRut()` → `validateRut()`
+Recommended flow for dirty data: `cleanRut()` -> `validateRut()`
 :::
 
 ## Custom Messages
@@ -63,4 +63,4 @@ getErrorMessage(result.error, {
 
 ---
 
-→ See full reference at [API rut-kit](/en/api/rut-kit)
+See full reference at [API rut-kit](/en/api/rut-kit)

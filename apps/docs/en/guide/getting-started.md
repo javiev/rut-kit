@@ -60,6 +60,6 @@ rutSchema.parse('18.972.631-7')
 
 ## Next Steps
 
-- [Validation](/en/guide/validation) — When to use `isValidRut` vs `validateRut`
-- [Formatting](/en/guide/formatting) — Output formats and data cleaning
-- [Zod](/en/guide/zod) — Schema for forms and APIs
+- [Validation](/en/guide/validation) - When to use `isValidRut` vs `validateRut`
+- [Formatting](/en/guide/formatting) - Output formats and data cleaning
+- [Zod](/en/guide/zod) - Schema for forms and APIs

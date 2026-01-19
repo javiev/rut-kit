@@ -54,4 +54,4 @@ getRutCheckDigit('33333335') // 'K'
 
 ---
 
-→ See full reference at [API rut-kit](/en/api/rut-kit)
+See full reference at [API rut-kit](/en/api/rut-kit)

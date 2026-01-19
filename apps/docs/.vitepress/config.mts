@@ -1,10 +1,35 @@
 import { defineConfig } from 'vitepress'
+import llmstxt from 'vitepress-plugin-llms'
 import pkg from '../../../packages/rut-kit/package.json'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "rut-kit 🇨🇱",
   description: "Chilean RUT validation with descriptive errors for JavaScript and TypeScript",
+
+  vite: {
+    plugins: [
+      llmstxt({
+        ignoreFiles: [
+          'index.md',
+          'guide/**',
+          'api/**',
+          'integrations/**',
+          'README.md',
+          'en/index.md'
+        ],
+        customLLMsTxtTemplate: `# rut-kit
+
+> Chilean RUT validation with descriptive errors for JavaScript and TypeScript
+
+Fast, lightweight, with Zod support.
+
+## Documentation
+
+{toc}`
+      })
+    ]
+  },
 
   locales: {
     root: {

@@ -60,7 +60,7 @@ const schema = z.object({
 
 app.post('/api/users', zValidator('json', schema), (c) => {
   const data = c.req.valid('json')
-  // data.rut → '18972631-7'
+  // data.rut: '18972631-7'
   return c.json({ success: true })
 })
 ```
@@ -81,7 +81,7 @@ app.post('/api/users', (req, res) => {
     return res.status(400).json({ error: result.error })
   }
 
-  // result.rut → '189726317'
+  // result.rut: '189726317'
   res.json({ success: true })
 })
 ```

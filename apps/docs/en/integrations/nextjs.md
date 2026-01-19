@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  // result.data.rut → '18972631-7'
+  // result.data.rut: '18972631-7'
   return NextResponse.json({ success: true })
 }
 ```
