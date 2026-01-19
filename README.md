@@ -1,5 +1,7 @@
 # rut-kit 🇨🇱
 
+[![English](https://img.shields.io/badge/lang-English-blue)](README.en.md)
+
 Validación de RUT chileno con errores descriptivos para JavaScript y TypeScript. Rápido, liviano, con soporte para Zod.
 
 ```ts
@@ -35,7 +37,7 @@ bun add rut-kit zod
 ## Características
 
 - **Errores Descriptivos** 🎯 - Indica qué está mal: formato incorrecto o dígito verificador erróneo.
-- **Ultraliviano** ⚡ - 960 bytes gzipped. Sin dependencias. Solo lo esencial.
+- **[Ultraliviano](https://bundlephobia.com/package/rut-kit)** ⚡ - 960 bytes gzipped. Sin dependencias. Solo lo esencial.
 - **Multi-runtime** 🌍 - Funciona en Node.js, Bun, Edge y el navegador.
 - **Agnóstico** 🔌 - Funciona con cualquier framework: React, Vue, Svelte, Angular, etc.
 - **TypeScript Nativo** 🔷 - Escrito en TypeScript. Tipos incluidos. Autocompletado completo.
@@ -93,17 +95,13 @@ const schema = createRutSchema({
 
 Visita la [documentación completa](https://rut-kit.pages.dev/) para guías detalladas e integraciones con React, Next.js, Express y más.
 
-## Estructura del Proyecto
+## LLMs
 
-```
-rut-kit/
-├── packages/
-│   └── rut-kit/           # Librería principal (rut-kit)
-├── apps/
-│   └── docs/              # Documentación VitePress
-└── ...
-```
+Si usas asistentes de IA, puedes darles el contexto completo de la documentación:
+
+- [llms.txt](https://rut-kit.pages.dev/llms.txt) - Índice de documentación
+- [llms-full.txt](https://rut-kit.pages.dev/llms-full.txt) - Documentación completa en un solo archivo
 
 ## Licencia
 
-MIT © [Javier Gómez Contreras](https://github.com/javiev)
+MIT 
