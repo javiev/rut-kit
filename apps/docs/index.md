@@ -24,6 +24,7 @@ features:
   - icon: ⚡
     title: Ultraliviano
     details: 960 bytes gzipped. Sin dependencias. Solo lo esencial.
+    link: https://bundlephobia.com/package/rut-kit
 
   - icon: 🌍
     title: Multi-runtime
